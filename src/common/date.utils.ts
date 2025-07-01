@@ -8,4 +8,4 @@ export function formatedDate(dateString: string): string {
   const minutes = pad(date.getMinutes());
   const seconds = pad(date.getSeconds());
   return `${day}/${month}/${year} - ${hours}:${minutes}:${seconds}`;
-} 
+}

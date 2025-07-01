@@ -7,10 +7,9 @@ import { UrlsService } from './urls.service';
 import { UrlsController } from './urls.controller';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UrlEntity, UserEntity]),
-    AuthModule],
+  imports: [TypeOrmModule.forFeature([UrlEntity, UserEntity]), AuthModule],
   controllers: [UrlsController],
   providers: [UrlsService],
-  exports: [UrlsService]
+  exports: [UrlsService],
 })
 export class UrlsModule {}

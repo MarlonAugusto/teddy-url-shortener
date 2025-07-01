@@ -40,7 +40,7 @@ export class UserService {
       email: user.email,
       createdAt: user.createdAt,
       shortenedUrl: countShortenedUrl,
-      clicksReceived: countClicks
+      clicksReceived: countClicks,
     };
 
     return userData;

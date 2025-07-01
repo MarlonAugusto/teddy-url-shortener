@@ -33,18 +33,21 @@ describe('AuthService', () => {
 
     service = module.get<AuthService>(AuthService);
     userService = module.get<UserService>(UserService);
-    userRepository = module.get<Repository<UserEntity>>(getRepositoryToken(UserEntity));
+    userRepository = module.get<Repository<UserEntity>>(
+      getRepositoryToken(UserEntity),
+    );
   });
 
-  const password = '123'
-  const hashedPassword = '$2b$12$JELuiNBXs4/C8iMQeNow3ORAVfDOamfKYhYg2mfREb2g9sonu6r5e'
+  const password = '123';
+  const hashedPassword =
+    '$2b$12$JELuiNBXs4/C8iMQeNow3ORAVfDOamfKYhYg2mfREb2g9sonu6r5e';
   describe('createUser', () => {
     it('deve criar um usuário com sucesso quando todos os campos obrigatórios são fornecidos e o e-mail não está registrado', async () => {
       const user = {
         name: 'teste',
         email: 'test@example.com',
         password: password,
-        confirm_password: password
+        confirm_password: password,
       };
 
       userService.getByEmail = jest.fn().mockResolvedValue(null);
@@ -52,7 +55,11 @@ describe('AuthService', () => {
 
       const result = await service.createUser(user);
 
-      expect(result).toEqual({ id: 1, name: 'teste', email: 'test@example.com' });
+      expect(result).toEqual({
+        id: 1,
+        name: 'teste',
+        email: 'test@example.com',
+      });
       expect(userService.getByEmail).toHaveBeenCalledWith('test@example.com');
       expect(userRepository.save).toHaveBeenCalled();
     });
@@ -64,7 +71,9 @@ describe('AuthService', () => {
         password: password,
       };
 
-      await expect(service.createUser(user)).rejects.toThrow(BadRequestException);
+      await expect(service.createUser(user)).rejects.toThrow(
+        BadRequestException,
+      );
     });
 
     it('deve lançar BadRequestException quando o e-mail já está registrado', async () => {
@@ -76,7 +85,9 @@ describe('AuthService', () => {
 
       userService.getByEmail = jest.fn().mockResolvedValue({ id: 1, ...user });
 
-      await expect(service.createUser(user)).rejects.toThrow(BadRequestException);
+      await expect(service.createUser(user)).rejects.toThrow(
+        BadRequestException,
+      );
       expect(userService.getByEmail).toHaveBeenCalledWith('test@example.com');
     });
   });
@@ -94,19 +105,25 @@ describe('AuthService', () => {
 
       const result = await service.login('test@example.com', password);
 
-      expect(result).toEqual({ id: 1, name: 'teste', email: 'test@example.com' });
+      expect(result).toEqual({
+        id: 1,
+        name: 'teste',
+        email: 'test@example.com',
+      });
       expect(userService.getByEmail).toHaveBeenCalled();
     });
 
     it('deve lançar BadRequestException quando o e-mail não existe', async () => {
       jest.spyOn(userService, 'getByEmail').mockResolvedValue(null);
 
-      await expect(service.login('test@example.com', 'password')).rejects.toThrow(BadRequestException);
+      await expect(
+        service.login('test@example.com', 'password'),
+      ).rejects.toThrow(BadRequestException);
       expect(userService.getByEmail).toHaveBeenCalledWith('test@example.com');
     });
 
     it('deve lançar BadRequestException quando a senha está incorreta', async () => {
-      const wrongPassword = '444'
+      const wrongPassword = '444';
       const user = {
         id: 1,
         name: 'teste',
@@ -117,9 +134,10 @@ describe('AuthService', () => {
       userService.getByEmail = jest.fn().mockResolvedValue(user);
       bcrypt.compare(wrongPassword, hashedPassword);
 
-      await expect(service.login('test@example.com', 'wrongPassword')).rejects.toThrow(BadRequestException);
+      await expect(
+        service.login('test@example.com', 'wrongPassword'),
+      ).rejects.toThrow(BadRequestException);
       expect(userService.getByEmail).toHaveBeenCalledWith('test@example.com');
     });
   });
-
 });

@@ -234,7 +234,6 @@ describe('UrlsService', () => {
       expect(result).toHaveProperty('message');
       expect(urlRepository.save).toHaveBeenCalled();
     });
-
   });
   describe('getUrlById', () => {
     it('deve lançar NotFoundException se a URL não for encontrada', async () => {

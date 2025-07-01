@@ -1,7 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-} from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from '../user/models/user.entity';
 import { User } from '../user/models/user.interface';
@@ -20,9 +17,8 @@ export class AuthService {
     if (!user.name || !user.email || !user.password)
       throw new BadRequestException('Name, Email and Password are required.');
 
-    const userEmail = await this.userService.getByEmail(user.email)
-    if (userEmail)
-      throw new BadRequestException('Email already registered.');
+    const userEmail = await this.userService.getByEmail(user.email);
+    if (userEmail) throw new BadRequestException('Email already registered.');
 
     user.password = await bcrypt.hash(user.password, 12);
 

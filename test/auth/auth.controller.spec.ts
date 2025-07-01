@@ -16,7 +16,6 @@ describe('AuthController', () => {
     UrlEntity: class {},
   }));
 
-
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AuthController],
@@ -57,8 +56,11 @@ describe('AuthController', () => {
 
       const result = await controller.register(registerDTO);
 
-      expect(result).toEqual({ id: 1, email: 'test@example.com' });
-      expect(authService.createUser).toHaveBeenCalledWith(registerDTO);
+      expect(result).toEqual({
+        status: 'success',
+        message: 'User registered successfully',
+        data: { id: 1, email: 'test@example.com' },
+      });      expect(authService.createUser).toHaveBeenCalledWith(registerDTO);
     });
 
     it('deve lançar BadRequestException quando as senhas não coincidem', async () => {
@@ -146,6 +148,5 @@ describe('AuthController', () => {
       expect(result).toEqual({ message: 'Logged out with success' });
       expect(res.clearCookie).toHaveBeenCalledWith('jwt');
     });
-
   });
 });

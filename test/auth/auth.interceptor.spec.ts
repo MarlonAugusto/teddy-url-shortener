@@ -51,7 +51,8 @@ describe('AuthInterceptor', () => {
     });
 
     // Act & Assert
-    expect(() => authInterceptor.intercept(context, next)).toThrow(UnauthorizedException);
+    expect(() => authInterceptor.intercept(context, next)).toThrow(
+      UnauthorizedException,
+    );
   });
-
 });

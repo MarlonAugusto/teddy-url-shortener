@@ -49,11 +49,11 @@ describe('AuthGuard', () => {
       user: null,
     };
 
-  const mockContext = {
-    switchToHttp: () => ({
-      getRequest: () => mockRequest,
-    }),
-  } as ExecutionContext;
+    const mockContext = {
+      switchToHttp: () => ({
+        getRequest: () => mockRequest,
+      }),
+    } as ExecutionContext;
 
     jest.spyOn(jwtService, 'verifyAsync').mockResolvedValue(mockUser);
 
@@ -75,7 +75,9 @@ describe('AuthGuard', () => {
       }),
     } as ExecutionContext;
 
-    jest.spyOn(jwtService, 'verifyAsync').mockRejectedValue(new Error('Invalid token'));
+    jest
+      .spyOn(jwtService, 'verifyAsync')
+      .mockRejectedValue(new Error('Invalid token'));
 
     const result = await guard.canActivate(mockContext);
 
