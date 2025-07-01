@@ -46,7 +46,7 @@ export class UrlsService {
         return {
             originalUrl,
             shortUrl: `http://localhost:${process.env.API_PORT}/${newUrl.shortUrl}`,
-            user: userData,
+            user: user ? userData : "Not registered",
         };
     }
 
