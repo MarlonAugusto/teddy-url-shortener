@@ -22,4 +22,4 @@ import { UserEntity } from 'src/user/models/user.entity';
   providers: [AuthService, AuthGuard],
   exports: [AuthService, JwtModule, AuthGuard],
 })
-export class AuthModule { }
+export class AuthModule {}

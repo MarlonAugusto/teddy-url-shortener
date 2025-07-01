@@ -27,29 +27,38 @@ describe('RedirectController', () => {
   describe('redirectToOriginal', () => {
     it('deve redirecionar para a URL original se shortUrl existir', async () => {
       const mockUrlEntity = { originalUrl: 'https://nestjs.com/' };
-      redirectService.getOriginalUrlAndIncrementClicks = jest.fn().mockResolvedValue(mockUrlEntity);
-  
+      redirectService.getOriginalUrlAndIncrementClicks = jest
+        .fn()
+        .mockResolvedValue(mockUrlEntity);
+
       const res = {
         redirect: jest.fn(),
       } as any;
-  
+
       await controller.redirectToOriginal('abc123', res);
-  
-      expect(redirectService.getOriginalUrlAndIncrementClicks).toHaveBeenCalledWith('abc123');
+
+      expect(
+        redirectService.getOriginalUrlAndIncrementClicks,
+      ).toHaveBeenCalledWith('abc123');
       expect(res.redirect).toHaveBeenCalledWith('https://nestjs.com/');
     });
 
     it('deve lançar NotFoundException se shortUrl não existir', async () => {
-      (redirectService.getOriginalUrlAndIncrementClicks as jest.Mock).mockResolvedValue(null);
-  
+      (
+        redirectService.getOriginalUrlAndIncrementClicks as jest.Mock
+      ).mockResolvedValue(null);
+
       const res = {
         redirect: jest.fn(),
       } as any;
-  
-      await expect(controller.redirectToOriginal('Shortened URL not found', res)).rejects.toThrow(NotFoundException);
-      expect(redirectService.getOriginalUrlAndIncrementClicks).toHaveBeenCalledWith('Shortened URL not found');
+
+      await expect(
+        controller.redirectToOriginal('Shortened URL not found', res),
+      ).rejects.toThrow(NotFoundException);
+      expect(
+        redirectService.getOriginalUrlAndIncrementClicks,
+      ).toHaveBeenCalledWith('Shortened URL not found');
       expect(res.redirect).not.toHaveBeenCalled();
     });
-  })
-
+  });
 });

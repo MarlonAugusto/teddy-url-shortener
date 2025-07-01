@@ -6,12 +6,9 @@ import { RedirectService } from './redirect.service';
 import { UrlsModule } from '../urls/urls.module';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([UrlEntity]),
-    UrlsModule
-  ],
+  imports: [TypeOrmModule.forFeature([UrlEntity]), UrlsModule],
   controllers: [RedirectController],
   providers: [RedirectService],
-  exports: [RedirectService]
+  exports: [RedirectService],
 })
 export class RedirectModule {}

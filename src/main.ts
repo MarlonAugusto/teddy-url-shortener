@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
-import * as cookieParser from 'cookie-parser'
+import * as cookieParser from 'cookie-parser';
 import * as yaml from 'js-yaml';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
@@ -15,12 +15,13 @@ async function bootstrap() {
     exclude: ['/:shortUrl'],
   });
 
-  const swaggerDocument = yaml.load(readFileSync(resolve(__dirname, '../api-spec.yaml'), 'utf8'));
+  const swaggerDocument = yaml.load(
+    readFileSync(resolve(__dirname, '../api-spec.yaml'), 'utf8'),
+  );
   SwaggerModule.setup('docs', app, swaggerDocument);
 
   await app.listen(process.env.API_PORT ?? 8000);
-  console.log(`Projeto URL: http://localhost:${process.env.API_PORT}`)
-  console.log(`Swagger URL: http://localhost:${process.env.API_PORT}/docs`)
-
+  console.log(`Projeto URL: http://localhost:${process.env.API_PORT}`);
+  console.log(`Swagger URL: http://localhost:${process.env.API_PORT}/docs`);
 }
 bootstrap();

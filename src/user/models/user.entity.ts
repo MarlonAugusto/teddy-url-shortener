@@ -1,5 +1,13 @@
 import { UrlEntity } from 'src/urls/models/url.entity';
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+  CreateDateColumn,
+  UpdateDateColumn,
+  DeleteDateColumn,
+} from 'typeorm';
 
 @Entity('users')
 export class UserEntity {
@@ -15,7 +23,7 @@ export class UserEntity {
   @Column()
   password: string;
 
-  @OneToMany(() => UrlEntity, url => url.user, { cascade: true })
+  @OneToMany(() => UrlEntity, (url) => url.user, { cascade: true })
   urls: UrlEntity[];
 
   @CreateDateColumn()

@@ -14,6 +14,6 @@ import { UrlsModule } from 'src/urls/urls.module';
   ],
   controllers: [UserController],
   providers: [UserService],
-  exports: [UserService]
+  exports: [UserService],
 })
-export class UserModule { }
+export class UserModule {}
