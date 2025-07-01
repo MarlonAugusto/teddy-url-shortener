@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -31,7 +32,7 @@ export class UrlsController {
   async getUrls(@Request() req) {
     const userId = req.user?.id;
     if (!userId) {
-      throw new NotFoundException('User not authenticated');
+      throw new BadRequestException('User not authenticated');
     }
 
     return this.urlService.getUserUrls(userId);
@@ -40,9 +41,9 @@ export class UrlsController {
   @UseGuards(AuthGuard)
   @Delete(':id')
   async deleteUrl(@Param('id') id: number, @Request() req) {
-    const userId = req.user.id;
-    if (!userId) {
-      throw new NotFoundException('User not authenticated');
+    const userId = req.user?.id;
+    if (!userId || !id) {
+      throw new BadRequestException('User not authenticated');
     }
     return this.urlService.deleteUrl(userId, id);
   }
@@ -54,9 +55,9 @@ export class UrlsController {
     @Body('originalUrl') newOriginalUrl: string,
     @Request() req,
   ) {
-    const userId = req.user.id;
-    if (!userId) {
-      throw new NotFoundException('User not authenticated');
+    const userId = req.user?.id;
+    if (!userId || !id) {
+      throw new BadRequestException('User not authenticated');
     }
     return this.urlService.updateUrl(userId, id, newOriginalUrl);
   }
@@ -64,9 +65,9 @@ export class UrlsController {
   @UseGuards(AuthGuard)
   @Get(':id')
   async getUrlById(@Param('id') id: number, @Request() req) {
-    const userId = req.user.id;
-    if (!userId) {
-      throw new NotFoundException('User not authenticated');
+    const userId = req.user?.id;
+    if (!userId || !id) {
+      throw new BadRequestException('User not authenticated');
     }
     return this.urlService.getUrlById(userId, id);
   }
