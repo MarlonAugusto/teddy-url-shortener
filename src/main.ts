@@ -15,8 +15,8 @@ async function bootstrap() {
     exclude: ['/:shortUrl'],
   });
 
-  //const swaggerDocument = yaml.load(readFileSync(resolve(__dirname, '../api-spec.yaml'), 'utf8'));
-  //SwaggerModule.setup('docs', app, swaggerDocument);
+  const swaggerDocument = yaml.load(readFileSync(resolve(__dirname, '../api-spec.yaml'), 'utf8'));
+  SwaggerModule.setup('docs', app, swaggerDocument);
 
   await app.listen(process.env.API_PORT ?? 8000);
   console.log(`Projeto URL: http://localhost:${process.env.API_PORT}`)
