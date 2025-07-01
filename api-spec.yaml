@@ -1,0 +1,247 @@
+openapi: 3.0.0
+info:
+  title: Teddy URL Shortener API
+  description: API para encurtamento de URLs com autenticação JWT
+  version: 1.0.0
+servers:
+  - url: http://localhost:8000/api
+    description: Servidor local
+
+paths:
+  /auth/register:
+    post:
+      summary: Registro de usuário
+      description: Registra um novo usuário
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: "Swagger teste"
+                email:
+                  type: string
+                  example: "swaggerteste@gmail.com"
+                password:
+                  type: string
+                  example: "123456"
+                password_confirm:
+                  type: string
+                  example: "123456"
+      responses:
+        "201":
+          description: Usuário criado com sucesso
+        "400":
+          description: Erro na validação
+
+  /auth/login:
+    post:
+      summary: Login de usuário
+      description: Realiza login e retorna um token JWT
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: "swaggerteste@gmail.com"
+                password:
+                  type: string
+                  example: "123456"
+      responses:
+        "200":
+          description: Login bem-sucedido
+        "401":
+          description: Credenciais inválidas
+
+  /auth/logout:
+    post:
+      summary: Logout do usuário
+      description: Limpa o cookie JWT para deslogar o usuário.
+      tags:
+        - Authentication
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: Logout realizado com sucesso
+
+  /user/info:
+    get:
+      summary: Obter informações do usuário autenticado
+      description: Retorna os dados do usuário autenticado com base no token JWT.
+      tags:
+        - User
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: Retorna os dados do usuário
+        "401":
+          description: Não autenticado
+
+  /short/url:
+    post:
+      summary: Encurtar URL
+      description: Encurta uma URL. Usuários autenticados terão a URL associada à sua conta.
+      tags:
+        - URLs
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                originalUrl:
+                  type: string
+                  example: "https://nestjs.com/"
+      responses:
+        "201":
+          description: URL encurtada com sucesso
+        "400":
+          description: Erro na validação
+    get:
+      summary: Listar URLs do usuário autenticado
+      description: Retorna todas as URLs encurtadas associadas ao usuário autenticado.
+      tags:
+        - URLs
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: Lista de URLs encurtadas
+        "401":
+          description: Não autenticado
+
+  /short/url/{id}:
+    patch:
+      summary: Atualizar URL encurtada
+      description: Permite que um usuário autenticado edite o link original de uma URL encurtada.
+      tags:
+        - URLs
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                originalUrl:
+                  type: string
+                  example: "https://google.com/"
+      responses:
+        "200":
+          description: URL atualizada com sucesso
+        "404":
+          description: URL não encontrada
+    delete:
+      summary: Excluir URL encurtada
+      description: Exclui logicamente uma URL encurtada associada ao usuário.
+      tags:
+        - URLs
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      responses:
+        "200":
+          description: URL excluída com sucesso
+        "404":
+          description: URL não encontrada
+    get:
+      summary: "Obter detalhes de uma URL encurtada"
+      description: "Retorna os detalhes de uma URL encurtada específica do usuário autenticado."
+      tags:
+        - URLs
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: "ID da URL encurtada"
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: "Detalhes da URL encurtada"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  originalUrl:
+                    type: string
+                  shortUrl:
+                    type: string
+                  clicks:
+                    type: integer
+                  createdAt:
+                    type: string
+                    format: date-time
+                  modifiedAt:
+                    type: string
+                    format: date-time
+        "404":
+          description: "URL não encontrada ou não pertence ao usuário"
+        "401":
+          description: "Usuário não autenticado"
+  
+  /{shortenUrl}:
+    get:
+      summary: Redirecionar para a URL original
+      description: Redireciona para a URL original a partir do shortUrl e incrementa o contador de cliques.
+      tags:
+        - Redirect
+      parameters:
+        - name: shortenUrl
+          in: path
+          required: true
+          description: "ID da URL encurtada"
+          schema:
+            type: string
+      responses:
+        "302":
+          description: Redirecionamento para a URL original
+          content:
+            application/json:
+              schema:
+                type: object
+                example: "http://localhost:8000/TESTEA"
+        "404":
+          description: URL não encontrada
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
